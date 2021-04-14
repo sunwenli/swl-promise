@@ -9,16 +9,38 @@
 </head>
 <script src="./src/Promise.js"></script>
 <script>
-    const myp = new SwlPromise((resolve, reject) => {
+    // const myp = new SwlPromise((resolve, reject) => {
+    //     setTimeout(() => {
+    //         // resolve(1)
+    //         reject(2)
+    //     }, 100);
+    // })
+    // myp.then(
+    //     value => { console.log("resolved ..", value) },
+    //     reason => { console.log("rejected ..", reason) }
+    // )
+    const p2 = new SwlPromise((resolve, reject) => {
         setTimeout(() => {
             // resolve(1)
             reject(2)
         }, 100);
+    }).then(
+        value => { console.log("resolved 2..", value) },
+        reason => {
+            console.log("rejected 2..", reason)
+            return new SwlPromise((resolve, reject) => {
+                resolve(3)
+            })
+        }
+    ).then(
+        value => { console.log("resolve 3..", value) },
+        reason => {
+            console.log("rejected 3..", reason)
+            throw 4
+        }
+    ).catch(err => {
+        console.log("catch...", err)
     })
-    myp.then(
-        value => { console.log("resolved ..", value) },
-        reason => { console.log("rejected ..", reason) }
-    )
 </script>
 
 <body>

@@ -1,19 +1,22 @@
 (function (w) {
 
+    const PENDING = 'pending'
+    const RESOLVED = 'resolved'
+    const REJECTED = 'rejected'
     /** 构造函数 */
     function Promise(executor) {
         console.log("swl promise")
         const _this = this;
-        _this.state = 'pending'
+        _this.state = PENDING
         _this.data = undefined
         _this.callbacks = []
 
 
         function resolve(value) {
-            if (_this.state !== 'pending') return;
+            if (_this.state !== PENDING) return;
 
             // 改变 promise 的状态
-            _this.state = 'resolved'
+            _this.state = RESOLVED
 
             // 设置 promise 的值
             _this.data = value
@@ -27,8 +30,8 @@
         }
 
         function reject(reason) {
-            if (_this.state !== 'pending') return;
-            _this.state = 'rejected'
+            if (_this.state !== PENDING) return;
+            _this.state = REJECTED
             _this.data = reason
             if (_this.callbacks.length > 0) {
                 _this.callbacks.forEach(callbacksObj => {
@@ -50,9 +53,41 @@
      * 返回一个新的 Promise 对象
      */
     Promise.prototype.then = function (onResolved, onRejected) {
-        this.callbacks.push({
-            onResolved,
-            onRejected,
+        const _this = this
+        onResolved = typeof onResolved === 'function' ? onResolved : value => value
+        onRejected = typeof onRejected === 'function' ? onRejected : reason => { throw reason }
+        return new Promise((resolve, reject) => {
+
+            function handler(callback) {
+                try {
+                    const result = callback(_this.data)
+                    if (result instanceof Promise) {
+                        result.then(resolve, reject)
+                    } else {
+                        resolve(_this.data)
+                    }
+                } catch (error) {
+                    reject(error)
+                }
+            }
+            if (_this.state === PENDING) {
+                _this.callbacks.push({
+                    onResolved(value) {
+                        handler(onResolved)
+                    },
+                    onRejected(reason) {
+                        handler(onRejected)
+                    },
+                })
+            } else if (_this.state === RESOLVED) {
+                setTimeout(() => {
+                    handler(onResolved)
+                });
+            } else { // REJECTED
+                setTimeout(() => {
+                    handler(onRejected)
+                });
+            }
         })
     }
 
@@ -64,7 +99,7 @@
      * @param {*} onRejected 
      */
     Promise.prototype.catch = function (onRejected) {
-
+        return this.then(undefined, onRejected)
     }
 
 
