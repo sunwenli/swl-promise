@@ -19,28 +19,62 @@
     //     value => { console.log("resolved ..", value) },
     //     reason => { console.log("rejected ..", reason) }
     // )
-    const p2 = new SwlPromise((resolve, reject) => {
-        setTimeout(() => {
-            // resolve(1)
-            reject(2)
-        }, 100);
-    }).then(
-        value => { console.log("resolved 2..", value) },
-        reason => {
-            console.log("rejected 2..", reason)
-            return new SwlPromise((resolve, reject) => {
-                resolve(3)
-            })
-        }
-    ).then(
-        value => { console.log("resolve 3..", value) },
-        reason => {
-            console.log("rejected 3..", reason)
-            throw 4
-        }
-    ).catch(err => {
-        console.log("catch...", err)
-    })
+
+    // const p2 = new SwlPromise((resolve, reject) => {
+    //     setTimeout(() => {
+    //         // resolve(1)
+    //         reject(2)
+    //     }, 100);
+    // }).then(
+    //     value => { console.log("resolved 2..", value) },
+    //     reason => {
+    //         console.log("rejected 2..", reason)
+    //         return new SwlPromise((resolve, reject) => {
+    //             resolve(3)
+    //         })
+    //     }
+    // ).then(
+    //     value => { console.log("resolve 3..", value) },
+    //     reason => {
+    //         console.log("rejected 3..", reason)
+    //         throw 4
+    //     }
+    // ).catch(err => {
+    //     console.log("catch...", err)
+    // })
+    // const p3 = Promise.resolve(1)
+
+    // sys promise resolve reject
+    // const p3 = Promise.resolve(3) // 一般值
+    // const p4 = Promise.resolve(Promise.resolve(4)) // 成功的promise, p4 成功
+    // const p5 = Promise.resolve(Promise.reject(5)) // 成功的promise, p5 失败
+    // p3.then(value => { console.log("resolve .. ", value) })
+    // p4.then(value => { console.log("resolve .. ", value) })
+    // p5.catch(err => console.log("cathch err ", err))
+    // 
+    // sys reject
+    // const p6 = Promise.reject(6) // 一般值
+    // const p7 = Promise.reject(Promise.resolve(7)) // 成功的promise, p4 失败
+    // const p8 = Promise.reject(Promise.reject(8)) // 成功的promise, p5 失败
+    // p6.catch(reason => { console.log("reject .. ", reason) })
+    // p7.catch(reason => { console.log("reject .. ", reason) })
+    // p8.catch(err => console.log("cathch err ", err))
+
+    // swl promise resolve reject
+    const sp3 = SwlPromise.resolve(3) // 一般值 ， p3 成功
+    const sp4 = SwlPromise.resolve(SwlPromise.resolve(4)) // 成功的promise, p4 成功
+    const sp5 = SwlPromise.resolve(SwlPromise.reject(5)) // 失败的promise, p5 失败
+    sp3.then(value => { console.log("swl resolve .. ", value) })
+    sp4.then(value => { console.log("swl resolve .. ", value) })
+    sp5.catch(err => console.log("swl reject.. ", err))
+
+    // swl reject
+    const p6 = SwlPromise.reject(6) // 一般值，p6 失败
+    const p7 = SwlPromise.reject(SwlPromise.resolve(7)) // 成功的promise, p7 失败
+    const p8 = SwlPromise.reject(SwlPromise.reject(8)) // 失败的promise, p8 失败
+    p6.catch(reason => { console.log("reject .. ", reason) })
+    p7.catch(reason => { console.log("reject .. ", reason) })
+    p8.catch(err => console.log("cathch err ", err))
 </script>
 
 <body>

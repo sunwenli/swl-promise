@@ -109,7 +109,13 @@
      * @param {*} value 
      */
     Promise.resolve = function (value) {
-        return Promise(value)
+        return new Promise((resolve, reject) => {
+            if (value instanceof Promise) {
+                value.then(resolve, reject)
+            } else {
+                resolve(value)
+            }
+        })
     }
 
     /**
@@ -118,7 +124,9 @@
      * @param {*} reason 
      */
     Promise.reject = function (reason) {
-        this.reject(reason)
+        return new Promise((resolve, reject) => {
+            reject(reason)
+        })
     }
 
     /**
