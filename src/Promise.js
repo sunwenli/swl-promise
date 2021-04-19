@@ -177,7 +177,11 @@
     Promise.delayResolve = function (value, ms) {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                return resolve(value)
+                if (value instanceof Promise) {
+                    value.then(resolve, reject)
+                } else {
+                    resolve(value)
+                }
             }, ms)
         })
     }
