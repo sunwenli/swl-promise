@@ -135,16 +135,59 @@
      * @param {*} promises 
      */
     Promise.all = function (promises) {
-
+        const values = new Array(promises.length)
+        let resolveCount = 0
+        return new Promise((resolve, reject) => {
+            promises.forEach((p, index) => {
+                p.then(
+                    value => {
+                        values[index] = value
+                        resolveCount++
+                        if (resolveCount == promises.length) {
+                            resolve(values)
+                        }
+                    },
+                    reason => {
+                        reject(reason)
+                    }
+                )
+            })
+        })
     }
-
     /**
      * Promise 函数对象方法 race
      * 返回一个 promise , 以最先完成的 promise 的状态为结果
      * @param {*} promises 
      */
     Promise.race = function (promises) {
+        return new Promise((resolve, reject) => {
+            promises.forEach(p => {
+                p.then(
+                    value => {
+                        resolve(value)
+                    },
+                    reason => {
+                        reject(reason)
+                    }
+                )
+            })
+        })
+    }
 
+    Promise.delayResolve = function (value, ms) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                return resolve(value)
+            }, ms)
+        })
+    }
+
+    Promise.delayReject = function (reason, ms) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                return reject(reason)
+            }, ms)
+        })
     }
 
     w.SwlPromise = Promise;

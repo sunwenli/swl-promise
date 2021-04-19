@@ -61,20 +61,49 @@
     // p8.catch(err => console.log("cathch err ", err))
 
     // swl promise resolve reject
-    const sp3 = SwlPromise.resolve(3) // 一般值 ， p3 成功
-    const sp4 = SwlPromise.resolve(SwlPromise.resolve(4)) // 成功的promise, p4 成功
-    const sp5 = SwlPromise.resolve(SwlPromise.reject(5)) // 失败的promise, p5 失败
-    sp3.then(value => { console.log("swl resolve .. ", value) })
-    sp4.then(value => { console.log("swl resolve .. ", value) })
-    sp5.catch(err => console.log("swl reject.. ", err))
+    // const sp3 = SwlPromise.resolve(3) // 一般值 ， p3 成功
+    // const sp4 = SwlPromise.resolve(SwlPromise.resolve(4)) // 成功的promise, p4 成功
+    // const sp5 = SwlPromise.resolve(SwlPromise.reject(5)) // 失败的promise, p5 失败
+    // sp3.then(value => { console.log("swl resolve .. ", value) })
+    // sp4.then(value => { console.log("swl resolve .. ", value) })
+    // sp5.catch(err => console.log("swl reject.. ", err))
 
     // swl reject
-    const p6 = SwlPromise.reject(6) // 一般值，p6 失败
-    const p7 = SwlPromise.reject(SwlPromise.resolve(7)) // 成功的promise, p7 失败
-    const p8 = SwlPromise.reject(SwlPromise.reject(8)) // 失败的promise, p8 失败
-    p6.catch(reason => { console.log("reject .. ", reason) })
-    p7.catch(reason => { console.log("reject .. ", reason) })
-    p8.catch(err => console.log("cathch err ", err))
+    // const p6 = SwlPromise.reject(6) // 一般值，p6 失败
+    // const p7 = SwlPromise.reject(SwlPromise.resolve(7)) // 成功的promise, p7 失败
+    // const p8 = SwlPromise.reject(SwlPromise.reject(8)) // 失败的promise, p8 失败
+    // p6.catch(reason => { console.log("reject .. ", reason) })
+    // p7.catch(reason => { console.log("reject .. ", reason) })
+    // p8.catch(err => console.log("cathch err ", err))
+
+
+    // sys all / race
+    // const p90 = Promise.resolve(0)
+    // const p91 = Promise.resolve(1)
+    // const p9 = Promise.all([p90, p91])
+    // p9.then(value => console.log("sys all resolve..", value), reason => console.log("sys reject..", reason))
+    // const p10 = Promise.race([p90, p91])
+    // p10.then(value => console.log("sys race resolve..", value), reason => console.log("sys race reject..", reason))
+
+    // swl all / race
+    // const p110 = SwlPromise.resolve(0)
+    // const p111 = SwlPromise.resolve(1)
+    // const p11 = SwlPromise.all([p111, p110,])
+    // p11.then(value => console.log("SWL all resolve..", value), reason => console.log("SWL reject..", reason))
+    // const p12 = Promise.race([p111, p110,])
+    // p12.then(value => console.log("SWL race resolve..", value), reason => console.log("SWL race reject..", reason))
+
+    // swl delayResolve / delayReject
+    const p222 = SwlPromise.delayResolve(SwlPromise.reject(222), 2000)
+    p222.then(
+        value => console.log('delay resolve ... ', value),
+        reason => console.log("reason...", reason)
+    ).catch(err => console.log("err", err))
+    const p333 = SwlPromise.delayReject(333, 3000)
+    p333.then(
+        value => console.log('delay resolve ... ', value),
+        reason => console.log('delay reject ... ', reason))
+        .catch(reason => console.log('catch...', reason))
 </script>
 
 <body>
